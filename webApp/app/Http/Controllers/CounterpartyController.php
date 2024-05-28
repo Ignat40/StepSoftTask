@@ -38,4 +38,21 @@ class CounterpartyController extends Controller
 
         return redirect()->back()->with('success', 'CounterParty added successfully.');
     }
+
+    public function update(Request $request, Counterparty $counterparty)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'bulstat' => 'required|string|max:9',
+            'address' => 'required|string',
+            'email' => 'required|email',
+        ]);
+
+        // Update the counterparty's attributes
+        $counterparty->update($validatedData);
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Counterparty updated successfully.');
+
+    }
 }
