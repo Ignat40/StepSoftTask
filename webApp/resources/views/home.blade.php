@@ -57,7 +57,17 @@
                         <h4>CounterParties</h4>
                         @foreach($counterparties as $counterparty)
                         <div class="card mb-2">
-                            <div class="card-body">
+                            <div class="card-body" id="counterparty{{ $counterparty->id }}">
+                                <p><strong>Name:</strong> {{ $counterparty->name }}</p>
+                                <p><strong>Bulstat:</strong> {{ $counterparty->bulstat }}</p>
+                                <p><strong>Address:</strong> {{ $counterparty->address }}</p>
+                                <p><strong>Email:</strong> {{ $counterparty->email }}</p>
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-primary btn-sm edit-counterparty" data-id="{{ $counterparty->id }}">Edit</button>
+                                    <button class="btn btn-outline-danger btn-sm delete-counterparty" data-id="{{ $counterparty->id }}">Delete</button>
+                                </div>
+                            </div>
+                            <div class="card-body" id="editCounterparty{{ $counterparty->id }}" style="display: none;">
                                 <form method="POST" action="{{ route('counterparties.update', $counterparty->id) }}">
                                     @csrf
                                     @method('PUT')
@@ -79,7 +89,7 @@
                                     </div>
                                     <div class="d-flex justify-content-end">
                                         <button type="submit" class="btn btn-outline-primary btn-sm me-2">Save</button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm delete-counterparty">Delete</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm cancel-edit" data-id="{{ $counterparty->id }}">Cancel</button>
                                     </div>
                                 </form>
                             </div>
@@ -96,11 +106,33 @@
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('addCounterPartyButton').addEventListener('click', function() {
             var form = document.getElementById('counterpartyForm');
-            if (form.style.display === 'none' || form.style.display === '') {
+            if (form.style.display === 'none' || form.style.display  === 'none') {
                 form.style.display = 'block';
             } else {
                 form.style.display = 'none';
             }
+        });
+
+        document.querySelectorAll('.edit-counterparty').forEach(function(editButton) {
+            editButton.addEventListener('click', function() {
+                var counterpartyId = this.getAttribute('data-id');
+                var counterpartyData = document.getElementById('counterparty' + counterpartyId);
+                var editCounterpartyForm = document.getElementById('editCounterparty' + counterpartyId);
+
+                counterpartyData.style.display = 'none';
+                editCounterpartyForm.style.display = 'block';
+            });
+        });
+
+        document.querySelectorAll('.cancel-edit').forEach(function(cancelButton) {
+            cancelButton.addEventListener('click', function() {
+                var counterpartyId = this.getAttribute('data-id');
+                var counterpartyData = document.getElementById('counterparty' + counterpartyId);
+                var editCounterpartyForm = document.getElementById('editCounterparty' + counterpartyId);
+
+                counterpartyData.style.display = 'block';
+                editCounterpartyForm.style.display = 'none';
+            });
         });
 
         document.querySelectorAll('.delete-counterparty').forEach(function(button) {
@@ -111,3 +143,4 @@
     });
 </script>
 @endsection
+

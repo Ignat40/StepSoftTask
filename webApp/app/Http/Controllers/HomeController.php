@@ -25,7 +25,6 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-
         // Get the CounterParties related to the authenticated user
         $counterparties = Counterparty::all();
 
