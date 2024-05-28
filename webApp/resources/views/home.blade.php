@@ -50,25 +50,21 @@
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email">
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-                        </div>
                         <button type="submit" class="btn btn-outline-success btn-sm">Add CounterParty</button>
                     </form>
-                    
+
                     <!-- List CounterParties here -->
                     <div class="mt-5">
                         <h4>CounterParties</h4>
                         @foreach($counterparties as $counterparty)
-                            <p>{{ $counterparty->name }}</p>
-                            <p>{{ $counterparty->bulstat }}</p>
-                            <p>{{ $counterparty->address }}</p>
-                            <p>{{ $counterparty->email }}</p>
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <p><strong>Name:</strong> {{ $counterparty->name }}</p>
+                                    <p><strong>Bulstat:</strong> {{ $counterparty->bulstat }}</p>
+                                    <p><strong>Address:</strong> {{ $counterparty->address }}</p>
+                                    <p><strong>Email:</strong> {{ $counterparty->email }}</p>
+                                </div>
+                            </div>
                         @endforeach
                     </div>
                 </div>

@@ -49,6 +49,6 @@ class User extends Authenticatable
 
     public function counterparties()
     {
-        return $this->hasMany(User::class, 'id');
+        return $this->hasMany(Counterparty::class);
     }
 }
