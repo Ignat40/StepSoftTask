@@ -53,6 +53,15 @@ class CounterpartyController extends Controller
 
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Counterparty updated successfully.');
+    }
 
+    public function delete(Counterparty $counterparty)
+    {
+        try {
+            $counterparty->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

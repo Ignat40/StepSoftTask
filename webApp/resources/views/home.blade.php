@@ -106,7 +106,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('addCounterPartyButton').addEventListener('click', function() {
             var form = document.getElementById('counterpartyForm');
-            if (form.style.display === 'none' || form.style.display  === 'none') {
+            if (form.style.display === 'none' || form.style.display === 'none') {
                 form.style.display = 'block';
             } else {
                 form.style.display = 'none';
@@ -136,11 +136,44 @@
         });
 
         document.querySelectorAll('.delete-counterparty').forEach(function(button) {
-            button.addEventListener('click', function() {
-                // Handle delete action
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default behavior of the button
+
+                var counterpartyId = this.getAttribute('data-id');
+
+                if (confirm("Are you sure you want to delete this counterparty?")) {
+                    fetch('{{ route("counterparties.delete", ":id") }}'.replace(':id', counterpartyId), {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                // Remove the deleted counterparty from the UI
+                                var counterpartyElement = document.getElementById('counterparty' + counterpartyId);
+                                if (counterpartyElement) {
+                                    counterpartyElement.remove();
+                                }
+                            } else {
+                                alert('An error occurred while deleting the counterparty.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while deleting the counterparty.');
+                        });
+                }
             });
         });
+
+
     });
 </script>
 @endsection
-
