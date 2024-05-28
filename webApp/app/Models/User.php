@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function counterparties()
+    {
+        return $this->hasMany(User::class, 'id');
+    }
 }

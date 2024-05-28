@@ -23,6 +23,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = auth()->user();
+
+        // Get the CounterParties related to the authenticated user
+        $counterparties = $user->counterparties;
+
+        return view('home', compact('user', 'counterparties'));
     }
 }
