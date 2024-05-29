@@ -32,8 +32,8 @@
                                             <button class="btn btn-outline-danger btn-sm delete-product" data-product-id="{{ $product->id }}">Delete</button>
                                         </td>
                                     </tr>
-
                                     @endforeach
+
                                 </tbody>
                             </table>
                         </div>
@@ -102,11 +102,30 @@
         document.querySelectorAll('.edit-product').forEach(function(button) {
             button.addEventListener('click', function() {
                 var productId = this.getAttribute('data-product-id');
-                // Redirect to edit product page or perform any desired action
-                // Example: window.location.href = '/products/' + productId + '/edit';
-                console.log('Edit product with ID:', productId);
+                var productRow = document.querySelector('#product-row-' + productId); // Get the product row to edit
+
+                var productNameCell = productRow.querySelector('td:nth-child(1)'); // Select the first cell for product name
+                var productPriceCell = productRow.querySelector('td:nth-child(2)'); // Select the second cell for product price
+                var productName = productNameCell.textContent.trim();
+                var productPrice = productPriceCell.textContent.trim();
+
+                var newName = prompt('Enter new name for the product:', productName);
+                var newPrice = prompt('Enter new price for the product:', productPrice);
+
+                // If user cancels or provides empty inputs, exit
+                if (newName === null || newPrice === null || newName.trim() === '' || newPrice.trim() === '') {
+                    return;
+                }
+
+                // Update UI immediately
+                productNameCell.textContent = newName;
+                productPriceCell.textContent = newPrice;
+
+                // Send a request to the server to update the product details...
             });
         });
+
+
 
         // Delete Product
         document.querySelectorAll('.delete-product').forEach(function(button) {
