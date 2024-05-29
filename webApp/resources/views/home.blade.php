@@ -113,6 +113,19 @@
             }
         });
 
+        var bulstatInput = document.getElementById('bulstat');
+        bulstatInput.addEventListener('input', function() {
+            var inputValue = this.value.trim();
+            var isValid = /^\d{1,9}$/.test(inputValue); // Regex to check if the input consists of digits and has length between 1 and 9
+            if (!isValid) {
+                // Display an error message
+                this.setCustomValidity('Bulstat must be a number with no more than 9 digits.');
+            } else {
+                // Clear any existing error message
+                this.setCustomValidity('');
+            }
+        });
+
         document.querySelectorAll('.edit-counterparty').forEach(function(editButton) {
             editButton.addEventListener('click', function() {
                 var counterpartyId = this.getAttribute('data-id');

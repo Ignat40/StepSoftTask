@@ -121,7 +121,35 @@
                 productNameCell.textContent = newName;
                 productPriceCell.textContent = newPrice;
 
-                // Send a request to the server to update the product details...
+                // Send a request to the server to update the product details
+                fetch('{{ route("products.update", ":id") }}'.replace(':id', productId), {
+                        method: 'PUT',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: newName,
+                            price: newPrice
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!data.success) {
+                            // Handle unsuccessful response from the server
+                            // You can revert UI changes here if needed
+                            throw new Error('Server response indicates failure');
+                        }
+                        // Product details updated successfully
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
         });
 
