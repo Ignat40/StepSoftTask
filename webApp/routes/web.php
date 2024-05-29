@@ -14,4 +14,6 @@ Route::post('/counterparties', [CounterpartyController::class, 'store'])->name('
 Route::put('/counterparties/{counterparty}', [CounterpartyController::class, 'update'])->name('counterparties.update');
 Route::delete('/counterparties/{counterparty}', [CounterpartyController::class, 'delete'])->name('counterparties.delete');
 
+Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products');
+
 
