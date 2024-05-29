@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('price', 8, 2);
             $table->string('photo')->nullable();
+            $table->foreignId('counterparty_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+
         });
     }
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Counterparty;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -11,15 +13,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view("products");
+        $products = Product::all();
+        $counterparties = Counterparty::all();
+
+        return view('products', compact('products', 'counterparties'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        $counterparties = Counterparty::all();
+        return view('products.create', compact('counterparties'));
     }
 
     /**
@@ -27,7 +34,21 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'photo' => 'nullable|string',
+            'counterparty_id' => 'required|exists:counterparties,id',
+        ]);
+        $product = new Product([
+            'name' => $request->input('name'),
+            'price' => $request->input('price'),
+            'photo' => $request->input('photo'),
+        ]);
+        $counterparty = Counterparty::findOrFail($request->input('counterparty_id'));
+        $counterparty->products()->save($product);
+
+        return redirect()->back()->with('success', 'Product added successfully.');
     }
 
     /**
@@ -49,16 +70,26 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'photo' => 'nullable|string',
+        ]);
+
+        $product->update($request->all());
+
+        return redirect()->back()->with('success', 'Product updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 }
