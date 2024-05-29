@@ -72,6 +72,9 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('products') ? 'active' : '' }}" href="/products">Products</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('sales') ? 'active' : '' }}" href="/sales">Sales</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

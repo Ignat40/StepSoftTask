@@ -15,5 +15,6 @@ Route::put('/counterparties/{counterparty}', [CounterpartyController::class, 'up
 Route::delete('/counterparties/{counterparty}', [CounterpartyController::class, 'delete'])->name('counterparties.delete');
 
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products');
+Route::get('/sales', [App\Http\Controllers\SalesController::class, 'index'])->name('sales');
 
 
