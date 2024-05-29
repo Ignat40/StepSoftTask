@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use \Illuminate\Support\Facades\Auth;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Counterparty;
@@ -27,27 +28,22 @@ class SalesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'counterparty_id' => 'required|exists:counterparties,id',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-            'products.*.unit_price' => 'required|numeric|min:0',
+            'name' => 'required|string|max:255',
+            'bulstat' => 'required|string|max:9|unique:counterparties',
+            'address' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:counterparties',
         ]);
-
-        $sale = Sale::create([
-            'counterparty_id' => $request->input('counterparty_id'),
+    
+        Counterparty::create([
+            'name' => $request->name,
+            'bulstat' => $request->bulstat,
+            'address' => $request->address,
+            'email' => $request->email,
         ]);
-
-        foreach ($request->input('products') as $product) {
-            $amount = $product['quantity'] * $product['unit_price'];
-            $sale->products()->attach($product['product_id'], [
-                'quantity' => $product['quantity'],
-                'unit_price' => $product['unit_price'],
-                'amount' => $amount,
-            ]);
-        }
-
-        return redirect()->route('sales.index')->with('success', 'Sale created successfully.');
+    
+        return redirect()->back()->with('success', 'CounterParty added successfully.');
     }
+
 
     public function edit(Sale $sale)
     {
