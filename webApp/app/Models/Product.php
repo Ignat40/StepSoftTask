@@ -15,4 +15,11 @@ class Product extends Model
     {
         return $this->belongsTo(Counterparty::class);
     }
+
+    public function sales()
+    {
+        return $this->belongsToMany(Sale::class, 'sales_product')
+            ->withPivot('quantity', 'unit_price', 'amount')
+            ->withTimestamps();
+    }
 }

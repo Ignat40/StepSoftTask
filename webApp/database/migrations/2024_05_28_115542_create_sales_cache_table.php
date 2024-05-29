@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales_cache', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->foreignId('counterparty_id')->nullable()->constrained('counterparties');
             $table->json('products')->nullable(); 
             $table->timestamps();
         });
