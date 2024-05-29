@@ -18,15 +18,21 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Price</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Add products here -->
+
                                     @foreach($counterparty->products as $product)
-                                    <tr>
+                                    <tr id="product-row-{{ $product->id }}">
                                         <td>{{ $product->name }}</td>
                                         <td>{{ $product->price }}</td>
+                                        <td>
+                                            <button class="btn btn-outline-primary btn-sm edit-product" data-product-id="{{ $product->id }}">Edit</button>
+                                            <button class="btn btn-outline-danger btn-sm delete-product" data-product-id="{{ $product->id }}">Delete</button>
+                                        </td>
                                     </tr>
+
                                     @endforeach
                                 </tbody>
                             </table>
@@ -35,7 +41,7 @@
                     <div class="text-end">
                         <button class="btn btn-outline-success btn-sm add-product" data-id="{{ $counterparty->id }}">Add Product</button>
                     </div>
-                    <!-- Add Product Form Here -->
+
                     <form method="POST" action="{{ route('products.store') }}" class="product-form" data-counterparty="{{ $counterparty->id }}" style="display: none;">
                         @csrf
                         <input type="hidden" name="counterparty_id" value="{{ $counterparty->id }}">
@@ -60,7 +66,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Toggle display of add product form
+
         document.querySelectorAll('.add-product').forEach(function(button) {
             button.addEventListener('click', function() {
                 var counterpartyId = this.getAttribute('data-id');
@@ -73,7 +79,7 @@
             });
         });
 
-        // Validate and enable/disable save button
+        // Validate and enable save button
         document.querySelectorAll('.product-form').forEach(function(form) {
             form.addEventListener('input', function() {
                 var counterpartyId = this.getAttribute('data-counterparty');
@@ -81,6 +87,7 @@
                 var saveButton = document.querySelector('.save-product-btn[data-counterparty="' + counterpartyId + '"]');
                 var priceError = document.getElementById('price-error_' + counterpartyId);
 
+                // Check if the input is a valid positive number
                 if (!isNaN(priceInput.value) && priceInput.value.trim() !== '' && parseFloat(priceInput.value) >= 0) {
                     saveButton.disabled = false;
                     priceError.style.display = 'none';
@@ -90,6 +97,51 @@
                 }
             });
         });
+
+        // Edit Product
+        document.querySelectorAll('.edit-product').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var productId = this.getAttribute('data-product-id');
+                // Redirect to edit product page or perform any desired action
+                // Example: window.location.href = '/products/' + productId + '/edit';
+                console.log('Edit product with ID:', productId);
+            });
+        });
+
+        // Delete Product
+        document.querySelectorAll('.delete-product').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var productId = this.getAttribute('data-product-id');
+                var productRow = document.querySelector('#product-row-' + productId); // Get the product row to remove
+
+                if (confirm("Are you sure you want to delete this product?")) {
+                    productRow.style.display = 'none'; // Hide the product row immediately
+
+                    fetch('{{ route("products.delete", ":id") }}'.replace(':id', productId), {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (!data.success) {
+                                // If the deletion was not successful, show the product row again
+                                productRow.style.display = 'table-row';
+                                throw new Error('Server response indicates failure');
+                            }
+                        })
+                }
+            });
+        });
+
+
+
     });
 </script>
 

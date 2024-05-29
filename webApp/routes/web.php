@@ -20,7 +20,7 @@ Route::resource('products', ProductController::class);
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.delete');
 
 Route::get('/sales', [App\Http\Controllers\SalesController::class, 'index'])->name('sales');
 
