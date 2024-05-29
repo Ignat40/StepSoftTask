@@ -98,9 +98,13 @@ class SalesController extends Controller
 
     public function getProducts($counterpartyId)
     {
-        $counterparty = Counterparty::findOrFail($counterpartyId);
-        $products = $counterparty->products;
-
+        $products = Product::where('counterparty_id', $counterpartyId)->get();
         return response()->json($products);
+    }
+
+    public function getProductPrice($productId)
+    {
+        $product = Product::findOrFail($productId);
+        return response()->json(['price' => $product->price]);
     }
 }

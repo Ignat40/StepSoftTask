@@ -32,3 +32,5 @@ Route::put('/sales/{sale}', [App\Http\Controllers\SalesController::class, 'updat
 Route::delete('/sales/{sale}', [App\Http\Controllers\SalesController::class, 'destroy'])->name('sales.destroy');
 Route::get('/sales/{sale}', [App\Http\Controllers\SalesController::class, 'show'])->name('sales.show');
 Route::get('/get-products/{counterparty}', [SalesController::class, 'getProducts']);
+Route::get('/get-product-price/{productId}', [SalesController::class, 'getProductPrice']);
+Route::get('/get-products/{counterpartyId}', [SalesController::class, 'getProducts']);
