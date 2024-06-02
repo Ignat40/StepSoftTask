@@ -1,13 +1,12 @@
 <?php
 
-
 namespace App\Http\Controllers;
+
 use \Illuminate\Support\Facades\Auth;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Counterparty;
 use Illuminate\Http\Request;
-
 
 class SalesController extends Controller
 {
@@ -28,39 +27,21 @@ class SalesController extends Controller
 
     public function store(Request $request)
     {
-        // Check if the user is authenticated
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please log in to create a sale.');
-        }
-
-        // Validate the request data
         $request->validate([
-            'counterparty_id' => 'required|exists:counterparties,id',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-            'products.*.unit_price' => 'required|numeric|min:0',
+            'name' => 'required|string|max:255',
+            'bulstat' => 'required|string|max:9|unique:counterparties',
+            'address' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:counterparties',
         ]);
-
-        // Get the authenticated user
-        $user = Auth::user();
-
-        // Create the sale
-        $sale = $user->sales()->create([
-            'counterparty_id' => $request->input('counterparty_id'),
+    
+        Counterparty::create([
+            'name' => $request->name,
+            'bulstat' => $request->bulstat,
+            'address' => $request->address,
+            'email' => $request->email,
         ]);
-
-        // Attach products to the sale
-        foreach ($request->input('products') as $product) {
-            $amount = $product['quantity'] * $product['unit_price'];
-            $sale->products()->attach($product['product_id'], [
-                'quantity' => $product['quantity'],
-                'unit_price' => $product['unit_price'],
-                'amount' => $amount,
-            ]);
-        }
-
-        // Redirect back with success message
-        return redirect()->route('sales.index')->with('success', 'Sale created successfully.');
+    
+        return redirect()->back()->with('success', 'CounterParty added successfully.');
     }
 
 
