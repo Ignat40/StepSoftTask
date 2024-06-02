@@ -34,6 +34,8 @@
 
                     <form method="POST" action="{{ route('counterparties.store') }}" id="counterpartyForm" class="mt-3" style="display: none;">
                         @csrf
+                        <div class="alert alert-danger d-none" id="errorMessages"></div>
+
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
@@ -106,11 +108,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('addCounterPartyButton').addEventListener('click', function() {
             var form = document.getElementById('counterpartyForm');
-            if (form.style.display === 'none' || form.style.display === 'none') {
-                form.style.display = 'block';
-            } else {
-                form.style.display = 'none';
-            }
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
         });
 
         var bulstatInput = document.getElementById('bulstat');
@@ -118,12 +116,42 @@
             var inputValue = this.value.trim();
             var isValid = /^\d{1,9}$/.test(inputValue); // Regex to check if the input consists of digits and has length between 1 and 9
             if (!isValid) {
-                // Display an error message
                 this.setCustomValidity('Bulstat must be a number with no more than 9 digits.');
             } else {
-                // Clear any existing error message
                 this.setCustomValidity('');
             }
+        });
+
+        // Attach the submit event listener outside of the DOMContentLoaded event
+        document.getElementById('counterpartyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            var formData = new FormData(this);
+
+            // Send an AJAX request to submit the form data
+            fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => {
+                    // Check if the response status is OK
+                    if (response.ok) {
+                        // Redirect to the current page to reload
+                        window.location.reload();
+                    } else {
+                        // Handle the error
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => {
+                    // Log and handle the error
+                    console.error('Error:', error);
+                });
         });
 
         document.querySelectorAll('.edit-counterparty').forEach(function(editButton) {
@@ -150,7 +178,7 @@
 
         document.querySelectorAll('.delete-counterparty').forEach(function(button) {
             button.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default behavior of the button
+                event.preventDefault();
 
                 var counterpartyId = this.getAttribute('data-id');
 
@@ -161,15 +189,9 @@
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             }
                         })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
+                        .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // Remove the deleted counterparty from the UI
                                 var counterpartyElement = document.getElementById('counterparty' + counterpartyId);
                                 if (counterpartyElement) {
                                     counterpartyElement.remove();
@@ -185,8 +207,6 @@
                 }
             });
         });
-
-
     });
 </script>
 @endsection
