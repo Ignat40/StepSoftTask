@@ -66,6 +66,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Centered Navigation Tabs -->
                     <ul class="navbar-nav nav-underline mx-auto">
+                        @auth
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('home') ? 'active' : '' }}" aria-current="page" href="/home">Home</a>
                         </li>
@@ -75,6 +76,7 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('sales') ? 'active' : '' }}" href="/sales">Sales</a>
                         </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
