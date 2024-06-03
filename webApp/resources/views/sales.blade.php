@@ -36,7 +36,7 @@
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
                                         </form>
-                                        <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+<!--                                         <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-outline-primary btn-sm">Edit</a> -->
                                     </td>
                                 </tr>
                                 @endforeach
@@ -78,7 +78,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-outline-primary btn-sm">Add Sale</button>
-                        <button type="button" id="addRowButton" class="btn btn-outline-primary btn-sm">Add New Line</button>
+<!--                         <button type="button" id="addRowButton" class="btn btn-outline-primary btn-sm">Add New Line</button> -->
                     </form>
                 </div>
             </div>
